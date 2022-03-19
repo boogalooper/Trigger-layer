@@ -1,9 +1,7 @@
-﻿
-///////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 // Trigger layer
 // jazz-y@ya.ru
 ///////////////////////////////////////////////////////////////////////////////
-
 /*
 // BEGIN__HARVEST_EXCEPTION_ZSTRING
 <javascriptresource>
@@ -13,15 +11,11 @@
 </javascriptresource>
 // END__HARVEST_EXCEPTION_ZSTRING
 */
-
 #target photoshop
-
 $.localize = true
 //$.locale = "ru"
-
 const GUID = 'e20aa721-61ef-4edb-a670-4b93b69f0348',
     DESCGUID = '0c65653c-1707-4b74-b21b-cae1ac06b614';
-
 var target, event,
     rev = 0.43,
     mMoveTool = localize('$$$/MoveTool/Title'),
@@ -31,13 +25,11 @@ var target, event,
     AM = new ActionManager,
     str = new Locale,
     evt = new Events;
-
 try {
     if (arguments[0].hasKey(p = s2t('null'))) { target = t2s((arguments[0].getReference(p)).getDesiredClass()) }
     if (arguments[0].hasKey(p = s2t('tool'))) { if (arguments[0].getObjectValue(p).getString(s2t('title')) == mMoveTool) target = mMoveTool }
     if (arguments[0].hasKey(p = s2t('new'))) { target = t2s(arguments[0].getClass(p)) }
 } catch (e) { }
-
 try {
     event = t2s(arguments[1])
     if (event == 'set') {
@@ -45,13 +37,10 @@ try {
             event = t2s(arguments[0].getObjectValue(p).getKey(0)) == 'name' ? 'rename' : 'bypass'
         } else { event = 'bypass' }
     }
-
     if ((event == 'delete' || event == 'toolModalStateChanged') && target == undefined) event = 'bypass'
     if (event == 'toolModalStateChanged') event = 'select by'
 } catch (e) { }
-
 main()
-
 function main() {
     if (target == undefined && event == undefined) {
         AM.getScriptSettings(cfg)
@@ -61,14 +50,11 @@ function main() {
         }
         var w = buildWindow(), result = 0
         try { result = w.show() } catch (e) { }
-
         if (result == 1 || result == 2) app.eraseCustomOptions(DESCGUID)
-
         if (result == 1) {
             cfg.fromCopy = false
             AM.putScriptSettings(cfg)
         }
-
         if (result != 0) {
             evt.delEvt()
             if (cfg.enabled && cfg.triggers.count) {
@@ -76,8 +62,7 @@ function main() {
             }
         }
     } else {
-     //   alert (event + '\n' + target)
-        if (event != 'selectNoLayers' && event != 'bypass') {
+          if (event != 'selectNoLayers' && event != 'bypass') {
             AM.getScriptSettings(cfg)
             if (cfg.debug) $.hiresTimer
             var len = cfg.triggers.count,
@@ -92,12 +77,8 @@ function main() {
                 layerEffects = AM.getLayerProperty(s2t('layerEffects'), id, true, true),
                 channel = AM.getChannelProperty(d = s2t('channelName'), true).getString(d),
                 effects = hasFilterMask || layerEffects;
-
                 if (channel == 'RGB' && target == 'channel')  target = 'layer'
-            //alert(docId + '\n' + id + '\n' + channel + '\n' + lrName + '\n\n' + $.getenv('docId') + '\n' + $.getenv('layerId') + '\n' + $.getenv('channel') + '\n' + $.getenv('lrName'))
-
             if (Number($.getenv('docId')) != docId || Number($.getenv('layerId')) != id || $.getenv('channel') != channel || $.getenv('lrName') != lrName) {
-        //        alert ('here')
                 for (var i = 0; i < len; i++) {
                     if (triggerLayer(AM.getListItemObject(cfg.triggers, i))) break;
                 }
@@ -112,16 +93,12 @@ function main() {
             $.setenv('channel', '')
             $.setenv('lrName', '')
         }
-
-
     }
-
     function triggerLayer(cur) {
         if (!cur.enabled) return false;
         if (!cur.layerMode && target == 'channel') return false;
         if (cur.layerMode && target == 'action') return false;
         if (cur.layerMode && target == 'layer') return false;
-
         if (!cur.layerMode) {
             if (cur.mask) { if (!checkMask(lrName, cur.mask, cur.fullMatch, cur.exept)) return false; }
             if (cur.label != 0) { if (cur.label != lrLabel) return false; }
@@ -131,33 +108,25 @@ function main() {
         } else {
             if (cur.mask) { if (!checkMask(channel, cur.mask, cur.fullMatch, cur.exept)) return false; }
         }
-
         if (cur.action == 0) {
             if (cur.doNotChangeTool) { if (currentTool != cur.tool) return false; }
             AM.selectTool(cur.tool)
             if (cur.saveSettings) { AM.setToolOptions(cur.tool, cur.toolOptions) }
-
             if (cfg.debug) { debugAlert(target, event, cur) }
             return cur.bypass ? false : true;
-
         } else if (cur.action == 1) {
             if (AM.checkAction(cur.set, cur.atn)) { AM.runAction(cur.set, cur.atn) }
-
             if (cfg.debug) { debugAlert(target, event, cur) }
-
             return cur.bypass ? false : true;
         } else if (cur.action == 2) {
             try { $.evalFile(File(cur.script)) } catch (e) { }
-
             if (cfg.debug) { debugAlert(target, event, cur) }
             return cur.bypass ? false : true;
-
         } else if (cur.action == 3) {
             if (cfg.debug) { debugAlert(target, event, cur) }
             return cur.bypass ? false : true;
         }
     }
-
     function checkMask(s, mask, fullMatch, exept) {
         if (fullMatch) {
             if (s.indexOf(mask) == -1) return exept ? true : false;
@@ -169,13 +138,11 @@ function main() {
         }
         return exept ? false : true;
     }
-
     function debugAlert(t, e, c) {
         alert(str.Event + e + ' ' + t + '\n' + str.Trigger + createTriggerLabel(c) + '\n\n' + str.Timer + $.hiresTimer / 1000000 + 's')
         $.hiresTimer
     }
 }
-
 function buildWindow() {
     // W
     // =
@@ -185,7 +152,6 @@ function buildWindow() {
     w.alignChildren = ['left', 'top'];
     w.spacing = 10;
     w.margins = 16;
-
     // PNLIST
     // ======
     var pnList = w.add('panel', undefined, undefined, { name: 'pnList' });
@@ -194,7 +160,6 @@ function buildWindow() {
     pnList.alignChildren = ['left', 'top'];
     pnList.spacing = 10;
     pnList.margins = 10;
-
     // GRMAIN
     // ======
     var grMain = pnList.add('group', undefined, { name: 'grMain' });
@@ -202,12 +167,10 @@ function buildWindow() {
     grMain.alignChildren = ['left', 'center'];
     grMain.spacing = 10;
     grMain.margins = 0;
-
     var list = grMain.add('listbox', undefined, undefined, { name: 'list' });
     list.selection = 0;
     list.preferredSize.width = 650;
     list.preferredSize.height = 200;
-
     // GRBN
     // ====
     var grBn = grMain.add('group', undefined, { name: 'grBn' });
@@ -216,23 +179,18 @@ function buildWindow() {
     grBn.spacing = 10;
     grBn.margins = 0;
     grBn.alignment = ['left', 'top'];
-
     var bnAdd = grBn.add('button', undefined, undefined, { name: 'bnAdd' });
     bnAdd.text = str.Add;
     bnAdd.preferredSize.width = 95;
-
     var bnDel = grBn.add('button', undefined, undefined, { name: 'bnDel' });
     bnDel.text = str.Delete;
     bnDel.preferredSize.width = 95;
-
     var bnUp = grBn.add('button', undefined, undefined, { name: 'bnUp' });
     bnUp.text = str.Up;
     bnUp.preferredSize.width = 95;
-
     var bnDown = grBn.add('button', undefined, undefined, { name: 'bnDown' });
     bnDown.text = str.Down;
     bnDown.preferredSize.width = 95;
-
     // GROUP1
     // ======
     var grSpace = grBn.add('group', undefined, { name: 'grSpace' });
@@ -241,26 +199,20 @@ function buildWindow() {
     grSpace.alignChildren = ['left', 'center'];
     grSpace.spacing = 10;
     grSpace.margins = 0;
-
     var bnRemoveAll = grBn.add('button', undefined, undefined, { name: 'bnRemoveAll' });
     bnRemoveAll.text = str.RemoveAll;
     bnRemoveAll.preferredSize.width = 95;
-
     // PNLIST
     // ======
     // GROUP2
     // ======
     var groupSettings = pnList.add('group');
-
     var chEnable = groupSettings.add('checkbox', undefined, undefined, { name: 'chEnable' });
     chEnable.text = str.ListEnabled;
     chEnable.preferredSize.width = 650;
-
     var bnParams = groupSettings.add('button', undefined, undefined, { name: 'bnParams' });
     bnParams.text = str.Params;
     bnParams.preferredSize.width = 95;
-
-
     // GRBUTTONS
     // =========
     var grButtons = w.add('group', undefined, { name: 'grButtons' });
@@ -269,16 +221,12 @@ function buildWindow() {
     grButtons.spacing = 10;
     grButtons.margins = 0;
     grButtons.alignment = ['center', 'top'];
-
     var ok = grButtons.add('button', undefined, undefined, { name: 'ok' });
     ok.text = str.Save;
-
     var cancel = grButtons.add('button', undefined, undefined, { name: 'cancel' });
     cancel.text = str.Cancel;
-
     var cfgTMP = new Config
     AM.getScriptSettings(cfgTMP, true)
-
     if (cfgTMP.fromCopy) {
         cfg = cfgTMP
         cfg.exchange.toStream()
@@ -297,11 +245,9 @@ function buildWindow() {
             w.close()
         }
     }
-
     chEnable.onClick = function () {
         cfg.enabled = this.value
     }
-
     bnAdd.onClick = function () {
         var result = addTrigger(new ActionDescriptor, true, list.selection != null ? list.selection.index : -1)
         if (!result) {
@@ -314,11 +260,9 @@ function buildWindow() {
             }
         }
     }
-
     bnParams.onClick = function () {
         settings()
     }
-
     list.onClick = function () {
         bnDel.enabled = list.selection == null || !cfg.triggers.count ? false : true
         if (list.selection != null) {
@@ -326,7 +270,6 @@ function buildWindow() {
             bnDown.enabled = list.selection.index == list.items.length - 1 || !cfg.triggers.count ? false : true
         } else { bnUp.enabled = bnDown.enabled = false }
     }
-
     list.onDoubleClick = function () {
         if (cfg.triggers.count && list.selection != null) {
             var result = addTrigger(cfg.triggers.getObjectValue(list.selection.index), false, list.selection.index)
@@ -341,35 +284,27 @@ function buildWindow() {
             }
         }
     }
-
     bnDel.onClick = function () {
         renewList(AM.putObjectToTriggersList(undefined, list.selection.index, 'del'))
     }
-
     bnUp.onClick = function () {
         renewList(AM.putObjectToTriggersList(undefined, list.selection.index, 'up'))
     }
-
     bnDown.onClick = function () {
         renewList(AM.putObjectToTriggersList(undefined, list.selection.index, 'down'))
     }
-
     bnRemoveAll.onClick = function () {
         renewList(AM.putObjectToTriggersList())
     }
-
     w.onShow = function () {
         chEnable.value = cfg.enabled
         bnAdd.active = true
         if (!cfg.fromCopy) renewList()
     }
-
     return w
-
     function renewList(cur) {
         var len = cfg.triggers.count
         list.removeAll()
-
         if (len) {
             for (var i = 0; i < len; i++) {
                 list.add('item', createTriggerLabel(AM.getListItemObject(cfg.triggers, i)))
@@ -383,9 +318,7 @@ function buildWindow() {
         bnUp.enabled = cur == 0 || !cfg.triggers.count ? false : true
         bnDown.enabled = cur == list.items.length - 1 || !cfg.triggers.count ? false : true
     }
-
 }
-
 function addTrigger(desc, addMode, sourceItem) {
     var w = new Window('dialog');
     w.text = str.TriggerSettings;
@@ -393,10 +326,8 @@ function addTrigger(desc, addMode, sourceItem) {
     w.alignChildren = ['left', 'top'];
     w.spacing = 10;
     w.margins = 16;
-
     var chActive = w.add('checkbox', undefined, undefined, { name: 'chActive' });
     chActive.text = str.TriggerEnabled;
-
     // PNSOURCE
     // ========
     var pnSource = w.add('panel', undefined, undefined, { name: 'pnSource' });
@@ -405,7 +336,6 @@ function addTrigger(desc, addMode, sourceItem) {
     pnSource.alignChildren = ['left', 'top'];
     pnSource.spacing = 10;
     pnSource.margins = [10, 15, 10, 10];
-
     // GMODE
     // =====
     var gMode = pnSource.add('group', undefined, { name: 'gMode' });
@@ -413,14 +343,11 @@ function addTrigger(desc, addMode, sourceItem) {
     gMode.alignChildren = ['left', 'center'];
     gMode.spacing = 10;
     gMode.margins = 0;
-
     var stMode = gMode.add('statictext', undefined, undefined, { name: 'stMode' });
     stMode.text = str.Mode;
     stMode.preferredSize.width = 100;
-
     var dlMode = gMode.add('dropdownlist', undefined, undefined, { name: 'dlMode', items: str.mode_array });
     dlMode.preferredSize.width = 235;
-
     // GMASK
     // =====
     var gMask = pnSource.add('group', undefined, { name: 'gMask' });
@@ -428,29 +355,23 @@ function addTrigger(desc, addMode, sourceItem) {
     gMask.alignChildren = ['left', 'center'];
     gMask.spacing = 10;
     gMask.margins = 0;
-
     var stMask = gMask.add('statictext', undefined, undefined, { name: 'stMask' });
     stMask.text = str.Mask;
     stMask.preferredSize.width = 100;
-
     var etMask = gMask.add('edittext {properties: {name: "etMask"}}');
     etMask.preferredSize.width = 235;
-
     var gOptions = pnSource.add('group', undefined, { name: 'gOptions' });
     // PNSOURCE
     // ========
     var chFullMatch = gOptions.add('checkbox', undefined, undefined, { name: 'chFullMatch' });
     chFullMatch.text = str.FullMatch;
     chFullMatch.preferredSize.width = 100;
-
     var chExept = gOptions.add('checkbox', undefined, undefined, { name: 'chExept' });
     chExept.text = str.Exept;
     // chFullMatch.preferredSize.width = 155;
-
     var grlayerMode = pnSource.add('group', undefined, { name: 'grlayerMode' });
     grlayerMode.orientation = 'column';
     grlayerMode.alignChildren = ['left', 'center'];
-
     // GTYPE
     // =====
     var gType = grlayerMode.add('group', undefined, { name: 'gType' });
@@ -458,15 +379,12 @@ function addTrigger(desc, addMode, sourceItem) {
     gType.alignChildren = ['left', 'center'];
     gType.spacing = 10;
     gType.margins = 0;
-
     var stType = gType.add('statictext', undefined, undefined, { name: 'stType' });
     stType.text = str.LayerType;
     stType.preferredSize.width = 100;
-
     var dlType = gType.add('dropdownlist', undefined, undefined, { name: 'dlType', items: str.Type_array });
     dlType.selection = 0;
     dlType.preferredSize.width = 235;
-
     // GLABEL
     // ======
     var gLabel = grlayerMode.add('group', undefined, { name: 'gLabel' });
@@ -474,22 +392,15 @@ function addTrigger(desc, addMode, sourceItem) {
     gLabel.alignChildren = ['left', 'center'];
     gLabel.spacing = 10;
     gLabel.margins = 0;
-
     var stLabel = gLabel.add('statictext', undefined, undefined, { name: 'stLabel' });
     stLabel.text = str.LayerLabel;
     stLabel.preferredSize.width = 100;
-
     var dlLabel = gLabel.add('dropdownlist', undefined, undefined, { name: 'dlLabel', items: str.Label_array });
     dlLabel.preferredSize.width = 235;
-
     var chUserMask = grlayerMode.add('checkbox', undefined, undefined, { name: 'chUserMask' });
     chUserMask.text = str.UserMask;
-    //chUserMask.preferredSize.width = 155;
-
     var chEffects = grlayerMode.add('checkbox', undefined, undefined, { name: 'chEffects' });
     chEffects.text = str.Effects;
-    //chEffects.preferredSize.width = 155;
-
     // PNTARGET
     // ========
     var pnTarget = w.add('panel', undefined, undefined, { name: 'pnTarget' });
@@ -498,7 +409,6 @@ function addTrigger(desc, addMode, sourceItem) {
     pnTarget.alignChildren = ['left', 'top'];
     pnTarget.spacing = 10;
     pnTarget.margins = [10, 15, 10, 10];
-
     // GRACTION
     // ========
     var grAction = pnTarget.add('group', undefined, { name: 'grAction' });
@@ -506,19 +416,15 @@ function addTrigger(desc, addMode, sourceItem) {
     grAction.alignChildren = ['left', 'center'];
     grAction.spacing = 10;
     grAction.margins = 0;
-
     var stAction = grAction.add('statictext', undefined, undefined, { name: 'stAction' });
     stAction.text = str.Activate;
     stAction.preferredSize.width = 100;
-
     var dlAction = grAction.add('dropdownlist', undefined, undefined, { name: 'dlAction', items: str.Action_array });
     dlAction.preferredSize.width = 235;
-
     // W
     // =
     var chBypass = w.add('checkbox', undefined, undefined, { name: 'chBypass' });
     chBypass.text = str.Bypass;
-
     // GRBUTTONS
     // =========
     var grButtons = w.add('group', undefined, { name: 'grButtons' });
@@ -527,70 +433,54 @@ function addTrigger(desc, addMode, sourceItem) {
     grButtons.spacing = 10;
     grButtons.margins = 0;
     grButtons.alignment = ['center', 'top'];
-
     var result = null
     w.addMode = addMode
     w.sourceItem = sourceItem
-
     var ok = grButtons.add('button', undefined, undefined, { name: 'ok' });
     ok.text = 'Ok';
-
     var cancel = grButtons.add('button', undefined, undefined, { name: 'cancel' });
     cancel.text = str.Cancel;
-
     dlMode.onChange = function () {
         grlayerMode.enabled = !this.selection.index
     }
-
     dlAction.onChange = function () {
         ok.enabled = true
         if (pnTarget.children.length > 1) { pnTarget.remove(pnTarget.children[1]) }
-
         switch (this.selection.index) {
             case 0: addTool(this.parent); break;
             case 1: addAction(this.parent); break;
             case 2: addScript(this.parent); break;
         }
-
         w.layout.layout(true)
     }
-
     etMask.onChanging = function () {
         gOptions.visible = this.text == '' ? false : true
     }
     chFullMatch.onClick = function () {
         cfg.fullMatch = this.value
     }
-
     chExept.onClick = function () {
         cfg.exept = this.value
     }
-
     chUserMask.onClick = function () {
         cfg.userMask = this.value
     }
-
     chEffects.onClick = function () {
         cfg.effects = this.value
     }
-
     chBypass.onClick = function () {
         cfg.bypass = this.value
     }
-
     ok.onClick = function () {
         result = AM.windowsSettingsToDesc(w)
         w.close()
     }
-
     cancel.onClick = function () {
         result = new ActionDescriptor
         w.close()
     }
-
     w.onShow = function () {
         for (var i = 0; i < str.icoArr.length; i++) { dlLabel.items[i].image = str.icoArr[i] }
-
         if (desc.count == 0) {
             if (AM.getAppProperty('numberOfDocuments')) {
                 if (AM.getChannelProperty('itemIndex') == -1) {
@@ -624,10 +514,8 @@ function addTrigger(desc, addMode, sourceItem) {
         }
         gOptions.visible = etMask.text == '' ? false : true
     }
-
     w.show();
     return result
-
     function addTool(parent) {
         // GRTOOL
         // ======
@@ -636,7 +524,6 @@ function addTrigger(desc, addMode, sourceItem) {
         grTool.alignChildren = ['left', 'center'];
         grTool.spacing = 10;
         grTool.margins = 0;
-
         // GBNTOOL
         // =======
         var gBnTool = grTool.add('group', undefined, { name: 'gBnTool' });
@@ -644,23 +531,18 @@ function addTrigger(desc, addMode, sourceItem) {
         gBnTool.alignChildren = ['left', 'center'];
         gBnTool.spacing = 10;
         gBnTool.margins = 0;
-
         var stTool = gBnTool.add('statictext', undefined, undefined, { name: 'stTool' });
         stTool.preferredSize.width = 100;
-
         var bnSelect = gBnTool.add('button', undefined, undefined, { name: 'bnSelect' });
         bnSelect.text = str.Select;
         bnSelect.preferredSize.width = 235;
-
         // GRTOOL
         // ======
         var chSaveSettings = grTool.add('checkbox', undefined, undefined, { name: 'chSaveSettings' });
         chSaveSettings.text = str.ToolPreset;
-
         var chDoNotChangeTool = grTool.add('checkbox', undefined, undefined, { name: 'chDoNotChangeTool' });
         chDoNotChangeTool.text = str.DoNotChangeTool;
         chDoNotChangeTool.preferredSize.width = 335;
-
         if (desc.count == 0 || AM.getDescOptions(desc, 'tool') == null) {
             bnSelect.text = AM.getAppProperty('tool')[0]
             parent.parent.parent.toolOptions = AM.getCurrentToolOptions()
@@ -669,22 +551,18 @@ function addTrigger(desc, addMode, sourceItem) {
         } else {
             AM.settingsObjToWindow(desc, w, false)
         }
-
         chSaveSettings.onClick = function () {
             desc = AM.windowsSettingsToDesc(w, false, desc)
             cfg.saveSettings = this.value
         }
-
         chDoNotChangeTool.onClick = function () {
             desc = AM.windowsSettingsToDesc(w, false, desc)
             cfg.doNotChangeTool = this.value
         }
-
         bnSelect.onClick = function () {
             cfg.exchange = AM.windowsSettingsToDesc(parent.parent.parent, true)
             evt.addEvt(true)
             w.close()
-
             var bt = new BridgeTalk(),
                 ph = BridgeTalk.getSpecifier('photoshop'),
                 f = ";f('" + $.fileName.toString() + "','" + str.Cpt + "','" + str.TipLabel + "','" + str.SelectTool + "');",
@@ -748,14 +626,11 @@ function addTrigger(desc, addMode, sourceItem) {
                 \
                     d.show();\
                 })"
-
             bt.target = ph;
             bt.body = "var f=" + z + f;
             bt.send();
         }
-
     }
-
     function addAction(parent) {
         var autoLoadAtn = true
         // GRACTION1
@@ -765,7 +640,6 @@ function addTrigger(desc, addMode, sourceItem) {
         grAction1.alignChildren = ['left', 'center'];
         grAction1.spacing = 10;
         grAction1.margins = 0;
-
         // GRSET
         // =====
         var grSet = grAction1.add('group', undefined, { name: 'grSet' });
@@ -773,15 +647,12 @@ function addTrigger(desc, addMode, sourceItem) {
         grSet.alignChildren = ['left', 'center'];
         grSet.spacing = 10;
         grSet.margins = 0;
-
         var StSet = grSet.add('statictext', undefined, undefined, { name: 'StSet' });
         StSet.text = str.Set;
         StSet.preferredSize.width = 100;
         StSet.justify = 'left';
-
         var dlSet = grSet.add('dropdownlist', undefined, undefined, { name: 'dlSet' });
         dlSet.preferredSize.width = 235;
-
         // GRATN
         // =====
         var grAtn = grAction1.add('group', undefined, { name: 'grAtn' });
@@ -789,18 +660,14 @@ function addTrigger(desc, addMode, sourceItem) {
         grAtn.alignChildren = ['left', 'center'];
         grAtn.spacing = 10;
         grAtn.margins = 0;
-
         var stAtn = grAtn.add('statictext', undefined, undefined, { name: 'stAtn' });
         stAtn.text = str.Atn;
         stAtn.preferredSize.width = 100;
         stAtn.justify = 'left';
-
         var dlAtn = grAtn.add('dropdownlist', undefined, undefined, { name: 'dlAtn' });
         dlAtn.preferredSize.width = 235;
-
         var actionList = AM.getActionsList(),
             currentAction = AM.getCurrentAction()
-
         dlSet.onChange = function () {
             if (this.selection) {
                 dlAtn.removeAll()
@@ -810,16 +677,13 @@ function addTrigger(desc, addMode, sourceItem) {
                 if (autoLoadAtn) dlAtn.selection = 0
             }
         }
-
         dlAtn.onChange = function () {
             desc = AM.windowsSettingsToDesc(w, false, desc)
         }
-
         if (AM.getDescOptions(desc, 'set') != null) {
             var set = AM.getDescOptions(desc, 'set'),
                 atn = AM.getDescOptions(desc, 'atn'),
                 found = false;
-
             for (var i = 0; i < actionList.length; i++) {
                 if (actionList[i][0] == set) {
                     if (findAction(actionList[i][1], atn)) {
@@ -830,11 +694,9 @@ function addTrigger(desc, addMode, sourceItem) {
             }
             if (!found) actionList.unshift([AM.getDescOptions(desc, 'set'), [AM.getDescOptions(desc, 'atn')]])
         }
-
         for (var i = 0; i < actionList.length; i++) {
             dlSet.add('item', actionList[i][0])
         }
-
         autoLoadAtn = false
         if (desc.count == 0 || AM.getDescOptions(desc, 'set') == null) {
             if (actionList.length) {
@@ -851,7 +713,6 @@ function addTrigger(desc, addMode, sourceItem) {
             AM.settingsObjToWindow(desc, w, false)
         }
         autoLoadAtn = true
-
         function findAction(a, atn) {
             for (var i = 0; i < a.length; i++) {
                 if (a[i] == atn) return true
@@ -859,7 +720,6 @@ function addTrigger(desc, addMode, sourceItem) {
             return false
         }
     }
-
     function addScript(parent) {
         // GRACTION1
         // =========
@@ -868,7 +728,6 @@ function addTrigger(desc, addMode, sourceItem) {
         grScript.alignChildren = ['left', 'center'];
         grScript.spacing = 10;
         grScript.margins = 0;
-
         // SCRIPT
         // =====
         var grScript1 = grScript.add('group', undefined, { name: 'grSet' });
@@ -876,34 +735,26 @@ function addTrigger(desc, addMode, sourceItem) {
         grScript1.alignChildren = ['left', 'center'];
         grScript1.spacing = 10;
         grScript1.margins = 0;
-
         var stScript = grScript1.add('statictext', undefined, undefined, { name: 'StSet' });
         stScript.text = str.Script;
         stScript.preferredSize.width = 100;
         stScript.justify = 'left';
-
         var dlScript = grScript1.add('dropdownlist', undefined, undefined, { name: 'dlScript' });
         dlScript.selection = 0;
         dlScript.preferredSize.width = 235;
-
         dlScript.onChange = function () {
             w.script = decodeURI(File($.fileName).path + '/' + this.selection.text)
             desc = AM.windowsSettingsToDesc(w, false, desc)
         }
-
         AM.settingsObjToWindow(desc, w, false)
-
         var scripts = getScripts(),
             exists = findScriptPath(w.script, scripts)
-
         if (w.script || scripts.length) {
             if (exists == -1 && w.script) dlScript.add('item', decodeURI(File(w.script).name))
             for (var i = 0; i < scripts.length; i++) dlScript.add('item', scripts[i])
             dlScript.selection = exists == -1 ? 0 : exists
         }
-
         ok.enabled = dlScript.enabled = dlScript.items.length ? true : false
-
         function findScriptPath(s, list) {
             if (s == undefined) return -1
             s = decodeURI(File(s).name).toUpperCase()
@@ -916,7 +767,6 @@ function addTrigger(desc, addMode, sourceItem) {
         }
     }
 }
-
 function settings() {
     var result = false
     // DIALOG
@@ -927,7 +777,6 @@ function settings() {
     w.alignChildren = ['left', 'top'];
     w.spacing = 10;
     w.margins = 16;
-
     // PANEL1
     // ======
     var pn = w.add('panel', undefined, undefined, { name: 'pn' });
@@ -936,28 +785,20 @@ function settings() {
     pn.alignChildren = ['left', 'top'];
     pn.spacing = 10;
     pn.margins = [10, 15, 10, 10];
-
     var chSelect = pn.add('checkbox')
     chSelect.text = str.Selection
-
     var chPlay = pn.add('checkbox')
     chPlay.text = str.Play
-
     var chMake = pn.add('checkbox')
     chMake.text = str.Make
-
     var chRename = pn.add('checkbox')
     chRename.text = str.Rename
-
     var chDelete = pn.add('checkbox')
     chDelete.text = str.Delete
-
     var chMove = pn.add('checkbox')
     chMove.text = str.Move
-
     var chDebug = w.add('checkbox')
     chDebug.text = str.Debug
-
     // GROUP1
     // ======
     var grBn = w.add('group', undefined, { name: 'grBn' });
@@ -968,41 +809,33 @@ function settings() {
     grBn.alignment = ['center', 'top']
     var ok = grBn.add('button', undefined, undefined, { name: 'ok' });
     ok.text = str.Save
-
     chSelect.onClick = function () {
         cfg.select = this.value
         bnOkStatus()
     }
-
     chPlay.onClick = function () {
         cfg.play = this.value
         bnOkStatus()
     }
-
     chMake.onClick = function () {
         cfg.make = this.value
         bnOkStatus()
     }
-
     chRename.onClick = function () {
         cfg.rename = this.value
         bnOkStatus()
     }
-
     chDelete.onClick = function () {
         cfg.delete = this.value
         bnOkStatus()
     }
-
     chMove.onClick = function () {
         cfg.move = this.value
         bnOkStatus()
     }
-
     chDebug.onClick = function () {
         cfg.debug = this.value
     }
-
     w.onShow = function () {
         chSelect.value = cfg.select
         chPlay.value = cfg.play
@@ -1012,26 +845,21 @@ function settings() {
         chDebug.value = cfg.debug
         chMove.value = cfg.move
     }
-
     function bnOkStatus() {
         ok.enabled = cfg.select || cfg.make || cfg.play || cfg.rename || cfg.delete
     }
     w.show()
 }
-
 function createTriggerLabel(l) {
     var s = (l.layerMode ? str.Channel : str.Layer) + ': ',
         d = l.exept ? str.ExeptList + ' ' : '',
         t = !l.fullMatch && l.mask != '' ? d + '*' + l.mask + '*' : d + '\'' + l.mask + '\'';
-
     s += l.mask != '' ? t : ''
-
     var t = '',
         h = ''
     if (!l.layerMode) {
         h += l.mask != '' ? ', ' : ''
         h += (str.Type_array[l.type] + ', ').toLowerCase()
-
         t += str.Label_array[l.label]
         if (l.userMask) t += ', ' + str.UMask
         if (l.effects) t += ', ' + str.Effects
@@ -1040,9 +868,7 @@ function createTriggerLabel(l) {
     } else {
         t += l.mask != '' ? '. ' : ''
     }
-
     s += t + str.Action_array[l.action]
-
     switch (l.action) {
         case 0:
             s += ': ' + l.tool
@@ -1055,12 +881,9 @@ function createTriggerLabel(l) {
         case 2: s += ': ' + decodeURI(File(l.script).name)
             break;
     }
-
     s += '. ' + (l.bypass ? str.Next : str.Stop)
-
     return s
 }
-
 function createEventFile() {
     var z = "(\
     function fnctn() {\
@@ -1071,7 +894,6 @@ function createEventFile() {
         r.putEnumerated(stringIDToTypeID('application'), stringIDToTypeID('ordinal'), stringIDToTypeID('targetEnum'));\
         if (z) z.children[0].children[1].text = typeIDToStringID(executeActionGet(r).getEnumerationType(stringIDToTypeID('tool')));\
     })"
-
     var msg = "var f=" + z + ";f();",
         f = File(Folder.temp + "/selectToolWindow.jsx");
     f.open('w');
@@ -1079,13 +901,11 @@ function createEventFile() {
     f.write(msg);
     f.close();
 }
-
 function getScripts() {
     var output = [],
         s = File($.fileName),
         p = Folder(s.path),
         files = p.getFiles('*.jsx');
-
     for (var i = 0; i < files.length; i++) {
         if (s.name != files[i].name) {
             output.push(decodeURI(files[i].name))
@@ -1093,7 +913,6 @@ function getScripts() {
     }
     return output
 }
-
 function ActionManager() {
     var gProperty = s2t('property'),
         gAction = s2t('action'),
@@ -1116,24 +935,20 @@ function ActionManager() {
         gChannel = s2t('channel'),
         gTool = s2t('tool'),
         gCurrentToolOptions = s2t('currentToolOptions');
-
     this.getAppProperty = function (p, getDesc) {
         if (!getDesc) p = s2t(p);
         (r = new ActionReference()).putProperty(gProperty, p);
         r.putEnumerated(gApplication, gOrdinal, gTargetEnum)
         return getDesc ? executeActionGet(r) : getDescValue(executeActionGet(r), p)
     }
-
     this.getCurrentToolOptions = function () {
         (r = new ActionReference()).putProperty(gProperty, gTool);
         r.putEnumerated(gApplication, gOrdinal, gTargetEnum)
         return executeActionGet(r).getObjectValue(gCurrentToolOptions)
     }
-
     this.getDescOptions = function (d, p) {
         try { return getDescValue(d, s2t(p)) } catch (e) { return null }
     }
-
     this.getDocProperty = function (p, getDesc, idx) {
         if (!getDesc) p = s2t(p);
         (r = new ActionReference()).putProperty(gProperty, p);
@@ -1145,11 +960,8 @@ function ActionManager() {
         try {
             return getDesc ? executeActionGet(r) : getDescValue(executeActionGet(r), p)
         } catch (e) { return null }
-
     }
-
     this.getLayerProperty = function (p, id, getDesc, hasKey) {
-
         if (!getDesc) p = s2t(p);
         (r = new ActionReference()).putProperty(gProperty, p);
         if (id) {
@@ -1165,9 +977,7 @@ function ActionManager() {
             }
         } catch (e) { return null }
     }
-
     this.getChannelProperty = function (p, getDesc) {
-
         if (!getDesc) p = s2t(p);
         (r = new ActionReference()).putProperty(gProperty, p)
         r.putEnumerated(gChannel, gOrdinal, gTargetEnum)
@@ -1175,7 +985,6 @@ function ActionManager() {
             return getDesc ? executeActionGet(r) : getDescValue(executeActionGet(r), p)
         } catch (e) { return null }
     }
-
     this.selectTool = function (tool) {
         tool = s2t(tool);
         (r = new ActionReference()).putClass(tool);
@@ -1184,7 +993,6 @@ function ActionManager() {
             executeAction(gSelect, d, DialogModes.NO)
         } catch (e) { }
     }
-
     this.setToolOptions = function (tool, options) {
         (r = new ActionReference()).putClass(s2t(tool));
         (d = new ActionDescriptor()).putReference(gTarget, r);
@@ -1193,14 +1001,12 @@ function ActionManager() {
             executeAction(gSet, d, DialogModes.NO)
         } catch (e) { }
     }
-
     this.checkAction = function (set, atn) {
         (r = new ActionReference()).putName(gAction, atn);
         r.putName(gActionSet, set)
         try { executeActionGet(r).getString(gName) } catch (e) { return false }
         return true
     }
-
     this.runAction = function (set, atn) {
         (r = new ActionReference()).putName(gAction, atn);
         r.putName(gActionSet, set);
@@ -1209,7 +1015,6 @@ function ActionManager() {
             executeAction(gPlay, d)
         } catch (e) { }
     }
-
     function getDescValue(d, p) {
         switch (d.getType(p)) {
             case DescValueType.OBJECTTYPE: return (d.getObjectValue(p));
@@ -1227,7 +1032,6 @@ function ActionManager() {
             default: break;
         };
     }
-
     this.getScriptSettings = function (settingsObj, shadowCopy, fromFile) {
         if (!fromFile) {
             var k = shadowCopy ? DESCGUID : GUID
@@ -1237,15 +1041,12 @@ function ActionManager() {
             descriptorToObject(settingsObj, getFromFile())
         }
     }
-
     this.putScriptSettings = function (settingsObj, shadowCopy) {
         var k = shadowCopy ? DESCGUID : GUID,
             d = objectToDescriptor(settingsObj)
-
         app.putCustomOptions(k, d)
         if (!shadowCopy) saveToFile(d)
     }
-
     function getFromFile() {
         var d = new ActionDescriptor(),
             f = new File(app.preferencesFolder + "/" + str.Message + ".desc");
@@ -1258,10 +1059,8 @@ function ActionManager() {
                 d.fromStream(s);
             }
         } catch (e) { alert(e, '', 1) }
-
         return d
     }
-
     function saveToFile(d) {
         var f = new File(app.preferencesFolder + "/" + str.Message + ".desc");
         try {
@@ -1273,7 +1072,6 @@ function ActionManager() {
         } catch (e) { alert(e, '', 1) }
         return false
     }
-
     function descriptorToObject(o, d) {
         var l = d.count;
         for (var i = 0; i < l; i++) {
@@ -1299,7 +1097,6 @@ function ActionManager() {
             }
         }
     }
-
     function objectToDescriptor(o) {
         var d = new ActionDescriptor;
         var l = o.reflect.properties.length;
@@ -1318,13 +1115,11 @@ function ActionManager() {
                     } else {
                         d.putObject(k, s2t('settings'), v)
                     }
-
                     break;
             }
         }
         return d;
     }
-
     this.windowsSettingsToDesc = function (parent, update, desc) {
         var w = {}
         if (desc) descriptorToObject(w, desc)
@@ -1342,7 +1137,6 @@ function ActionManager() {
         w.addMode = parent.addMode
         w.sourceItem = parent.sourceItem
         w.bypass = parent.findElement('chBypass').value
-
         switch (w.action) {
             case 0:
                 w.tool = parent.findElement('bnSelect').text
@@ -1360,11 +1154,9 @@ function ActionManager() {
         }
         return objectToDescriptor(w)
     }
-
     this.settingsObjToWindow = function (desc, parent, header) {
         var s = {}
         descriptorToObject(s, desc)
-
         if (header) {
             parent.findElement('dlMode').selection = s.layerMode
             parent.findElement('etMask').text = s.mask
@@ -1378,7 +1170,6 @@ function ActionManager() {
             parent.findElement('chActive').value = s.enabled
             parent.findElement('chBypass').value = s.bypass
         }
-
         switch (parent.findElement('dlAction').selection.index) {
             case 0:
                 parent.findElement('bnSelect').text = s.update ? AM.getAppProperty('tool')[0] : s.tool
@@ -1396,11 +1187,9 @@ function ActionManager() {
                 break;
         }
     }
-
     this.putObjectToTriggersList = function (desc, cur, mode) {
         var list = new ActionList,
             len = cfg.triggers.count
-
         switch (mode) {
             case 'add':
                 if (cur >= len || (cur == -1 && len != 0)) cur = len - 1
@@ -1427,43 +1216,33 @@ function ActionManager() {
                 cur--
                 var sel = cfg.triggers.getObjectValue(cur + 1),
                     prev = cfg.triggers.getObjectValue(cur)
-
                 for (var i = 0; i < cur; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
-
                 list.putObject(s2t('trigger'), sel)
                 list.putObject(s2t('trigger'), prev)
-
                 for (var i = cur + 2; i < len; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
-
                 break;
             case 'down':
                 cur++
                 var sel = cfg.triggers.getObjectValue(cur - 1),
                     next = cfg.triggers.getObjectValue(cur)
-
                 for (var i = 0; i <= cur - 2; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
-
                 list.putObject(s2t('trigger'), next)
                 list.putObject(s2t('trigger'), sel)
-
                 for (var i = cur + 1; i < len; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
-
                 break;
             case 'update':
                 for (var i = 0; i < cur; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
-
                 list.putObject(s2t('trigger'), desc)
-
                 for (var i = cur + 1; i < len; i++) {
                     list.putObject(s2t('trigger'), cfg.triggers.getObjectValue(i))
                 }
@@ -1472,33 +1251,25 @@ function ActionManager() {
                 var cur = -1
                 break;
         }
-
         cfg.triggers = list
         return cur
-
     }
-
     this.getListItemObject = function (l, i) {
         descriptorToObject(o = {}, l.getObjectValue(i))
         return o
     }
-
     this.getActionsList = function () {
         var output = [],
             setCounter = 1;
-
         while (true) {
             (r = new ActionReference()).putIndex(gActionSet, setCounter)
             try { d = executeActionGet(r) } catch (e) { break; }
-
             output.push([d.getString(gName), []])
-
             var numberChildren = d.hasKey(gNumberOfChildren) ? d.getInteger(gNumberOfChildren) : 0
             var idx = setCounter - 1
             if (numberChildren > 0) output[idx][1] = getActionList(setCounter, numberChildren)
             setCounter++
         }
-
         function getActionList(setIndex, numChildren) {
             var current = [];
             for (var i = 1; i <= numChildren; i++) {
@@ -1508,14 +1279,11 @@ function ActionManager() {
             }
             return current
         }
-
         return output
     }
-
     this.getCurrentAction = function () {
         try {
             (r = new ActionReference()).putEnumerated(gAction, gOrdinal, gTargetEnum);
-
             var atnName = executeActionGet(r).getString(gParent),
                 atnIndex = executeActionGet(r).getInteger(gParentIndex),
                 setName = getSetName(atnName, atnIndex)
@@ -1527,9 +1295,7 @@ function ActionManager() {
                 if (setName) return [setName, atnName]
             }
         } catch (e) { }
-
         return null
-
         function getSetName(atnName, atnIndex) {
             var setCounter = 1
             while (true) {
@@ -1537,9 +1303,7 @@ function ActionManager() {
                 ref.putIndex(gActionSet, setCounter)
                 var desc = undefined
                 try { desc = executeActionGet(ref) } catch (e) { break; }
-
                 var numberChildren = desc.hasKey(gNumberOfChildren) ? desc.getInteger(gNumberOfChildren) : 0
-
                 if (numberChildren > 0 && atnIndex <= numberChildren) {
                     var ref = new ActionReference()
                     ref.putProperty(gProperty, gName)
@@ -1556,18 +1320,15 @@ function ActionManager() {
             return null
         }
     }
-
     this.convertObjToStream = function (o) {
         return objectToDescriptor(o).toStream()
     }
-
     this.convertStreamToObj = function (s) {
         (d = new ActionDescriptor).fromStream(s);
         descriptorToObject(o = {}, d)
         return o
     }
 }
-
 function Config() {
     this.fullMatch = false
     this.exept = false
@@ -1588,12 +1349,9 @@ function Config() {
     this.delete = true
     this.move = true
 }
-
 function Events() {
-
     this.addEvt = function (eventWindow) {
         this.delEvt()
-
         app.notifiersEnabled = true
         var handlerFile = File($.fileName)
         if (eventWindow) {
@@ -1604,32 +1362,25 @@ function Events() {
                 app.notifiers.add('slct', handlerFile, 'Lyr ')
                 app.notifiers.add('slct', handlerFile, 'Chnl')
             }
-
             if (cfg.play) { app.notifiers.add('Ply ', handlerFile) }
-
             if (cfg.make) {
                 app.notifiers.add('Mk  ', handlerFile, 'Lyr ')
                 app.notifiers.add('Mk  ', handlerFile, 'Chnl')
             }
-
             if (cfg.rename) {
                 app.notifiers.add('setd', handlerFile, 'Lyr ')
                 app.notifiers.add('setd', handlerFile, 'Chnl')
             }
-
             if (cfg.delete) {
                 app.notifiers.add('Dlt ', handlerFile, 'Lyr ')
                 app.notifiers.add('Dlt ', handlerFile, 'Chnl')
             }
-
             if (cfg.move) {
                 app.notifiers.add('toolModalStateChanged', handlerFile)
             }
-            
             app.notifiers.add('selectNoLayers', handlerFile)
         }
     }
-
     this.delEvt = function () {
         var f = File(Folder.temp + '/selectToolWindow.jsx').name,
             s = File($.fileName).name;
@@ -1639,7 +1390,6 @@ function Events() {
         }
     }
 }
-
 function Locale() {
     var AnyLabel = { ru: 'Любая отметка', en: 'Any label' },
         None = { ru: 'Без отметки', en: 'No color' },
@@ -1672,7 +1422,6 @@ function Locale() {
         action = { ru: 'Экшен', en: 'Action' },
         script = { ru: 'Скрипт', en: 'Script' },
         nothing = { ru: 'Ничего не делать', en: 'Do nothing' };
-
     this.Message = 'Trigger layer',
         this.Label_array = [AnyLabel, Red, Orange, Yellow, Green, Blue, Violet, Gray, None],
         this.Type_array = [AnyKind, pixel, smart, text, group, vector, adjustment, fill, other],
