@@ -29,7 +29,7 @@ If you need to save or transfer script settings - just copy this file to a simil
 ![](assets/20220321_084041_2022-03-21_08-23-47.png)
 
 This window appears when adding or editing a trigger. In it, we must describe as accurately as possible the layer on which the script should work and indicate the necessary action.
-The `trigger enabled` option determines whether this rule will be processed in the general list of triggers. The option `continue after triggering` determines whether the following rules in the general list of triggers will be processed. 
+The `trigger enabled` option determines whether this rule will be processed in the general list of triggers. The option `continue after triggering` determines whether the following rules in the general list of triggers will be processed.
 
 #### Source:
 
@@ -59,13 +59,13 @@ Tested on Photoshop CC2014 and newer
 
 ## Video example:
 
-Frequency decomposition. Usually, the frequency decomposition is made by an action or a script with predefined layer names (for example, when I decompose into 2 frequencies - L - lower frequencies, H - upper ones). At lower frequencies, it is convenient for me to work with a mixing brush, and at higher frequencies with a stamp. Plus, it sometimes creates a layer-curve that enhances the upper frequencies (which I need to remove or turn off after retouching). With the help of a script and three triggers, you can minimize keyboard clicks by assigning the activation of the corresponding tools when selecting layers H and L, and also automatically delete the layer with adjustment curves: 
+**Frequency decomposition.** Usually, the frequency decomposition is made by an action or a script with predefined layer names (for example, when I decompose into 2 frequencies - L - lower frequencies, H - upper ones). At lower frequencies, it is convenient for me to work with a mixing brush, and at higher frequencies with a stamp. Plus, it sometimes creates a layer-curve that enhances the upper frequencies (which I need to remove or turn off after retouching). With the help of a script and three triggers, you can minimize keyboard clicks by assigning the activation of the corresponding tools when selecting layers H and L, and also automatically delete the layer with adjustment curves:
+
 [![](https://img.youtube.com/vi/tZiyEpcpm4c/0.jpg)](https://www.youtube.com/watch?v=tZiyEpcpm4c)
 
-
-Separate layers and layers-groups. In Photoshop, we often work with both individual layers and groups of layers. At the same time, if I select a group, then as a rule I want to move it entirely, and if I select a separate layer, then I want to move only it. It is clear that there is a checkbox “auto-select layer” and “auto-select group”, there is a transformation, but here and there you need to either click on the panel or use hotkeys, while literally a couple of triggers allow you not to touch anything except the mouse (watch out for the options with which the move tool is activated when selecting a layer and group after adding triggers) 
+**Separate layers and layers-groups.** In Photoshop, we often work with both individual layers and groups of layers. At the same time, if I select a group, then as a rule I want to move it entirely, and if I select a separate layer, then I want to move only it. It is clear that there is a checkbox “auto-select layer” and “auto-select group”, there is a transformation, but here and there you need to either click on the panel or use hotkeys, while literally a couple of triggers allow you not to touch anything except the mouse (watch out for the options with which the move tool is activated when selecting a layer and group after adding triggers)
 [![](https://img.youtube.com/vi/yuYct1ioOfY/0.jpg)](https://www.youtube.com/watch?v=yuYct1ioOfY)
 
-Layer masks. Often, when working with layers that have masks, you have to work not with the contents of the layer, but with the mask itself. To switch to the mask, you need to make extra clicks. Using the script, you can make sure that when you select any layer with a mask, not the layer itself but the mask is activated. For complete happiness, you can add a trigger with your favorite tool (for example, a brush) 
+**Layer masks.** Often, when working with layers that have masks, you have to work not with the contents of the layer, but with the mask itself. To switch to the mask, you need to make extra clicks. Using the script, you can make sure that when you select any layer with a mask, not the layer itself but the mask is activated. For complete happiness, you can add a trigger with your favorite tool (for example, a brush)
 [![](https://img.youtube.com/vi/8omukur07LE/0.jpg)](https://www.youtube.com/watch?v=8omukur07LE)
 
