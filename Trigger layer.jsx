@@ -18,7 +18,7 @@ $.localize = true
 const GUID = 'e20aa721-61ef-4edb-a670-4b93b69f0348',
     DESCGUID = '0c65653c-1707-4b74-b21b-cae1ac06b614';
 var target, event,
-    rev = 0.55,
+    rev = 0.551,
     s2t = stringIDToTypeID,
     t2s = typeIDToStringID,
     c2t = charIDToTypeID,
@@ -1668,7 +1668,10 @@ function Events() {
                 app.notifiers.add('slct', handlerFile, 'Lyr ')
                 app.notifiers.add('slct', handlerFile, 'Chnl')
             }
-            if (cfg.play) { app.notifiers.add('Ply ', handlerFile) }
+            if (cfg.play) { 
+                app.notifiers.add('Ply ', handlerFile) 
+                app.notifiers.add('pluginRun', handlerFile) 
+            }
             if (cfg.make) {
                 app.notifiers.add('Mk  ', handlerFile, 'Lyr ')
                 app.notifiers.add('Mk  ', handlerFile, 'contentLayer')
