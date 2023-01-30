@@ -18,7 +18,7 @@ $.localize = true
 const GUID = 'e20aa721-61ef-4edb-a670-4b93b69f0348',
     DESCGUID = '0c65653c-1707-4b74-b21b-cae1ac06b614';
 var target, event,
-    rev = 0.552,
+    rev = 0.56,
     s2t = stringIDToTypeID,
     t2s = typeIDToStringID,
     c2t = charIDToTypeID,
@@ -81,6 +81,7 @@ function main() {
                 lrKind = str.layerKindArray[AM.getLayerProperty(d = s2t('layerKind'), id, true).getInteger(d)],
                 currentTool = t2s(AM.getAppProperty(d = s2t('tool'), true).getEnumerationType(d)),
                 userMask = AM.getLayerProperty(d = s2t('hasUserMask'), id, true).getBoolean(d) || AM.getLayerProperty(d = s2t('hasVectorMask'), id, true).getBoolean(d),
+                locking = function (d) { for (var i = 0; i < d.count; i++) { if (d.getBoolean(d.getKey(i))) { return true } } return false }(AM.getLayerProperty(d = s2t('layerLocking'), id, true).getObjectValue(d)),
                 hasFilterMask = AM.getLayerProperty(s2t('hasFilterMask'), id, true, true) ? AM.getLayerProperty(d = s2t('hasFilterMask'), id, true).getBoolean(d) : false,
                 layerEffects = AM.getLayerProperty(s2t('layerEffects'), id, true, true),
                 channel = AM.getChannelProperty(d = s2t('channelName'), true).getString(d),
@@ -113,6 +114,7 @@ function main() {
             if (cur.type != 0) { if (cur.type != lrKind) return false; }
             if (cur.userMask) { if (!userMask) return false; }
             if (cur.effects) { if (!effects) return false; }
+            if (cur.locked) { if (!locking) return false; }
         } else {
             if (cur.mask) { if (!checkMask(channel, cur.mask, cur.fullMatch, cur.exept)) return false; }
         }
@@ -448,6 +450,8 @@ function addTrigger(desc, addMode, sourceItem) {
     chUserMask.text = str.UserMask;
     var chEffects = grlayerMode.add('checkbox', undefined, undefined, { name: 'chEffects' });
     chEffects.text = str.Effects;
+    var chLocked = grlayerMode.add('checkbox', undefined, undefined, { name: 'chEffects' });
+    chLocked.text = str.Locked;
     var pnTarget = w.add('panel', undefined, undefined, { name: 'pnTarget' });
     pnTarget.text = str.Action;
     pnTarget.orientation = 'column';
@@ -507,6 +511,9 @@ function addTrigger(desc, addMode, sourceItem) {
     chEffects.onClick = function () {
         cfg.effects = this.value
     }
+    chLocked.onClick = function () {
+        cfg.locked = ths.value
+    }
     chBypass.onClick = function () {
         cfg.bypass = this.value
     }
@@ -544,6 +551,7 @@ function addTrigger(desc, addMode, sourceItem) {
             chExept.value = cfg.exept
             chFullMatch.value = cfg.fullMatch
             chUserMask = cfg.userMask
+            chLocked = cfg.locked
             chEffects = cfg.effects
             dlAction.selection = 0
             chActive.value = true
@@ -1140,6 +1148,7 @@ function createTriggerLabel(l) {
         t += str.Label_array[l.label]
         if (l.userMask) t += ', ' + str.UMask
         if (l.effects) t += ', ' + str.Effects
+        if (l.locked) t += ', ' + str.Locked
         t += '. '
         t = h + t.toLowerCase()
     } else {
@@ -1438,6 +1447,7 @@ function ActionManager() {
         w.enabled = parent.findElement('chActive').value
         w.userMask = parent.findElement('chUserMask').value
         w.effects = parent.findElement('chEffects').value
+        w.locked = parent.findElement('chLocked').value
         w.update = update ? true : false
         w.addMode = parent.addMode
         w.sourceItem = parent.sourceItem
@@ -1473,6 +1483,7 @@ function ActionManager() {
             parent.findElement('chExept').value = s.exept
             parent.findElement('chUserMask').value = s.userMask
             parent.findElement('chEffects').value = s.effects
+            parent.findElement('chLocked').value = s.locked
             parent.findElement('chActive').value = s.enabled
             parent.findElement('chBypass').value = s.bypass
         }
@@ -1645,6 +1656,7 @@ function Config() {
     this.fromCopy = false
     this.userMask = false
     this.effects = false
+    this.locked = false
     this.exchange = new ActionDescriptor
     this.triggers = new ActionList
     this.bypass = false
@@ -1795,6 +1807,7 @@ function Locale() {
         this.Maintenance = { ru: 'Отслеживать события:', en: 'Track events:' },
         this.UserMask = { ru: 'есть пользовательская маска', en: 'has user mask' },
         this.Effects = { ru: 'есть эффекты', en: 'has effects' },
+        this.Locked = { ru: 'есть блокировка', en: 'has locking' },
         this.UMask = { ru: 'есть маска', en: 'has mask' },
         this.Bypass = { ru: 'продолжить после срабатывания', en: 'continue after triggering' },
         this.Stop = { ru: 'Стоп', en: 'Stop' },

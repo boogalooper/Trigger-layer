@@ -5,7 +5,7 @@ A script-based preset system that allows you to automatically launch a saved too
 ## How to install:
 
 1. Download latest version of [Trigger layer.jsx](Trigger%20layer.jsx) from GitHub repository [https://github.com/boogalooper/Trigger-layer]() 
-2. Сopy Trigger layer.jsx to `Presets\Scripts\` folder of Photoshop:
+2. Сopy Trigger layer.jsx to `Presets\Scripts\` folder of Photoshop
 3. If Photoshop was open, restart it. The script will appear in the menu `File -> Automate`
 4. Run script from menu and set up your triggers
 
@@ -19,7 +19,7 @@ The main window is a list of saved triggers. They can be added, edited, removed,
 
 ![](assets/20220321_083542_2022-03-21_08-22-34.png)
 
-The script uses Photoshop's notification subsystem - every time you select a layer, Photoshop calls the script. In the settings window, you can set at what types of events Photoshop will activate the script. The debugging option is useful when checking the correct operation of the script - after each execution, the script will show a window indicating the trigger that fired. During normal operation, this option should be disabled.
+The script uses Photoshop's notification subsystem - every time you select a layer in layers palette, Photoshop calls `Trigger layer` and it decides what exactly needs to be done, depending on your triggers settings: activate the tool with certain settings, run an action, or run another script. In the settings window, you can set at what types of events Photoshop will activate the script. The debugging option is useful when checking the correct operation of the script - after each execution, the script will show a window indicating the trigger that fired. During normal operation, this option should be disabled.
 
 The script stores all settings (including triggers) in a file:
 WINDOWS: `~User\AppData\Roaming\Adobe\Adobe Photoshop (your version number)\Adobe Photoshop 2020 Settings\Trigger layer.desc`,
@@ -31,17 +31,17 @@ If you need to save or transfer script settings - just copy this file to a simil
 ![](assets/20220321_084041_2022-03-21_08-23-47.png)
 
 This window appears when adding or editing a trigger. In it, we must describe as accurately as possible the layer on which the script should work and indicate the necessary action.
-The `trigger enabled` option determines whether this rule will be processed in the general list of triggers. The option `continue after triggering` determines whether the following rules in the general list of triggers will be processed.
+The `trigger enabled` option temporarily disable or enable the trigger without deleting it from the triggers list. The option `continue after triggering` determines whether the following rules in the trigger list will be processed or the script will stop after firing.
 
 #### Source:
 
 You can use a `layer` or a `channel` (including mask channels) as the event source for a trigger.
-In the `name mask` field, you can specify the name of the layer on which the script should work. With the `full match` option enabled, the script will work only if the layer name is identical to the entered text, with the option disabled, it is enough that the layer name contains the entered characters. The option `any, exept name mask`, inverts the mask (that is, the script will work on any layer that does not contain the specified characters).
-For layers, you can use additional filtering options: select a specific `layer kind` from the list, a `color label`, `has mask`, `has effects` (including smart object effects)
+In the `name mask` field, you can specify the name of the layer on which the script should work. With the `full match` option enabled, the trigger fires only if the layer name is identical to the entered text, with the option disabled, it is enough that the layer name contains the entered characters. The option `any, exept name mask`, inverts the mask (that is, the script will work on any layer that does not contain the specified characters).
+For layers, you can use additional filtering options: select a specific `layer kind` from the list, a `color label`, `has mask`, `has effects` (including smart object effects), `has locking`.
 
 #### Action:
 
-Once the script has found the layer, it can do one of four things:
+Once the script has found the layer, it can do one of four actions:
 
 1. activate the tool
 2. launch the action
@@ -53,7 +53,7 @@ If option `save instrument settings` selected, you can open the extended instrum
 
 ![](assets/20220321_091717_2022-03-21_08-24-32.png)
 
-The option `do not change if another tool is selected` allows you to set an additional filter when the trigger fires. The option do not change if another tool is selected allows you to set an additional filter when the trigger fires.
+The option `do not change if another tool is selected` allows you to set an additional filter when the trigger fires. The tool settings will only be changed if it is already manually selected in the toolbar before the trigger is fired.
 
 ## Compability:
 
