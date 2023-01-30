@@ -18,7 +18,7 @@ $.localize = true
 const GUID = 'e20aa721-61ef-4edb-a670-4b93b69f0348',
     DESCGUID = '0c65653c-1707-4b74-b21b-cae1ac06b614';
 var target, event,
-    rev = 0.551,
+    rev = 0.552,
     s2t = stringIDToTypeID,
     t2s = typeIDToStringID,
     c2t = charIDToTypeID,
@@ -836,7 +836,7 @@ function toolSettings(desc, tool, excluded) {
     bnUncheckAll.text = str.UncheckAll
     var et = gProps.add('edittext {properties: {readonly: true, multiline: true, borderless: true}}');
     et.preferredSize.width = 450;
-    et.preferredSize.height = 75;
+    et.preferredSize.height = 120;
     et.text = str.UnexpectedTool;
     var gButtons = w.add("group", undefined, { name: "gButtons" });
     gButtons.orientation = "row";
@@ -1668,9 +1668,9 @@ function Events() {
                 app.notifiers.add('slct', handlerFile, 'Lyr ')
                 app.notifiers.add('slct', handlerFile, 'Chnl')
             }
-            if (cfg.play) { 
-                app.notifiers.add('Ply ', handlerFile) 
-                app.notifiers.add('pluginRun', handlerFile) 
+            if (cfg.play) {
+                app.notifiers.add('Ply ', handlerFile)
+                app.notifiers.add('pluginRun', handlerFile)
             }
             if (cfg.make) {
                 app.notifiers.add('Mk  ', handlerFile, 'Lyr ')
@@ -1739,20 +1739,20 @@ function Locale() {
         this.icoObj = { none: 8, red: 1, orange: 2, yellowColor: 3, grain: 4, blue: 5, violet: 6, gray: 7 },
         this.layerKindArray =
         [
-            8, 
-            1, 
-            6, 
-            3, 
-            5, 
-            2, 
-            8, 
-            4, 
-            8, 
-            7, 
-            7, 
-            7, 
-            1, 
-            8 
+            8,
+            1,
+            6,
+            3,
+            5,
+            2,
+            8,
+            4,
+            8,
+            7,
+            7,
+            7,
+            1,
+            8
         ],
         this.Layer = { ru: 'Слой', en: 'Layer' },
         this.Channel = { ru: 'Канал', en: 'Channel' },
@@ -1820,7 +1820,7 @@ function Locale() {
         this.UncheckAll = { ru: 'Снять все отметки', en: 'Uncheck all' },
         this.Rename = { ru: 'переименование', en: 'rename' },
         this.ExtendedPreset = { ru: ' (расширенный пресет)', en: ' (extended preset)' },
-        this.UnexpectedTool = { ru: 'Вы можете указать, какие параметры будут применены при переключении иструмента.\nУчтите, что исключение определенных параметров может привести к неожиданным результатам.', en: 'You can specify which parameters will be applied when switching tool.\nPlease note that excluding some properties can lead to unexpected results.' },
+        this.UnexpectedTool = { ru: 'Перед вами полный набор настроек инструмента которые будут назначены при активации триггера. Вы можете управлять параметрами которые будут назначаться инструменту - включенные опции будут назначены из настроек которые вы видите выше, отключенные будут взяты из текущих (последних использованных в Фотошопе) настроек инструмента.\n\n* учтите, что отключение некоторых параметров может привести к не тому поведению инструмента, которое вы ожидаете.', en: 'Here is a complete set of tool settings that will be assigned when the trigger is activated. You can control the options that will be assigned to the tool - enabled options will be assigned from the settings you see above, disabled options will be taken from the current (last used in Photoshop) tool settings.\n\n* note that disabling some options may cause the tool to behave differently than you expect.' },
         this.Enable = { ru: 'Включить', en: 'Enable' },
         this.Disable = { ru: 'Выключить', en: 'Disable' },
         this.Edit = { ru: 'Настроить', en: 'Edit' };

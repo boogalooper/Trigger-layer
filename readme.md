@@ -1,27 +1,29 @@
 # Trigger layer
 
-A preset system that allows you to automatically launch a saved tool, action or script, depending of the attributes of the selected layer.
+A script-based preset system that allows you to automatically launch a saved tool, action or another script, depending of the attributes of the selected layer.
 
-## How to start:
+## How to install:
 
-1. Download [Trigger layer.jsx](Trigger%20layer.jsx), copy it to `Presets\Scripts\` folder of Photoshop.
-2. If Photoshop was open, restart it. The script will appear in the menu `File -> Automate`
+1. Download latest version of [Trigger layer.jsx](Trigger%20layer.jsx) from GitHub repository [https://github.com/boogalooper/Trigger-layer]() 
+2. Сopy Trigger layer.jsx to `Presets\Scripts\` folder of Photoshop:
+3. If Photoshop was open, restart it. The script will appear in the menu `File -> Automate`
+4. Run script from menu and set up your triggers
 
 ## Main window:
 
 ![](assets/20220321_082945_2022-03-21_08-22-09.png)
 
-The main window is a list of saved triggers. They can be added, edited, removed, moved up or down the list (triggers are executed in the order in which they were added), enabled or disabled without being deleted.
+The main window is a list of saved triggers. They can be added, edited, removed, moved up or down the list (triggers are executed in the order in which they were added), enabled or disabled.
 
 ## Settings window:
 
 ![](assets/20220321_083542_2022-03-21_08-22-34.png)
 
-The script uses Photoshop's notification subsystem - every time you activate a layer in one way or another, Photoshop calls the script. In the settings window, you can set at what types of events Photoshop will activate the script. The debugging option is useful when checking the correct operation of the script - after each execution, the script will show a window indicating the trigger that fired. During normal operation, this option should be disabled.
+The script uses Photoshop's notification subsystem - every time you select a layer, Photoshop calls the script. In the settings window, you can set at what types of events Photoshop will activate the script. The debugging option is useful when checking the correct operation of the script - after each execution, the script will show a window indicating the trigger that fired. During normal operation, this option should be disabled.
 
 The script stores all settings (including triggers) in a file:
-WIN: `~User\AppData\Roaming\Adobe\Adobe Photoshop 2020\Adobe Photoshop 2020 Settings\Trigger layer.desc`,
-MACOS: `~Library/Preferences/Adobe Photoshop 2020 Settings/Trigger layer.desc`
+WINDOWS: `~User\AppData\Roaming\Adobe\Adobe Photoshop (your version number)\Adobe Photoshop 2020 Settings\Trigger layer.desc`,
+MACOS: `~Library/Preferences/Adobe Photoshop (your version number) Settings/Trigger layer.desc`
 If you need to save or transfer script settings - just copy this file to a similar directory on another computer.
 
 ## Trigger window:
