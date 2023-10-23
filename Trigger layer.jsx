@@ -18,7 +18,7 @@ $.localize = true
 const GUID = 'e20aa721-61ef-4edb-a670-4b93b69f0348',
     DESCGUID = '0c65653c-1707-4b74-b21b-cae1ac06b614';
 var target, event,
-    rev = 0.56,
+    rev = 0.58,
     s2t = stringIDToTypeID,
     t2s = typeIDToStringID,
     c2t = charIDToTypeID,
@@ -356,7 +356,7 @@ function buildWindow() {
     }
     w.onShow = function () {
         chEnable.value = cfg.enabled
-        bnAdd.active = true
+        ok.active = true
         if (!cfg.fromCopy) renewList()
     }
     return w
@@ -450,7 +450,7 @@ function addTrigger(desc, addMode, sourceItem) {
     chUserMask.text = str.UserMask;
     var chEffects = grlayerMode.add('checkbox', undefined, undefined, { name: 'chEffects' });
     chEffects.text = str.Effects;
-    var chLocked = grlayerMode.add('checkbox', undefined, undefined, { name: 'chEffects' });
+    var chLocked = grlayerMode.add('checkbox', undefined, undefined, { name: 'chLocked' });
     chLocked.text = str.Locked;
     var pnTarget = w.add('panel', undefined, undefined, { name: 'pnTarget' });
     pnTarget.text = str.Action;
@@ -1230,7 +1230,15 @@ function ActionManager() {
     this.getCurrentToolOptions = function () {
         (r = new ActionReference()).putProperty(gProperty, gTool);
         r.putEnumerated(gApplication, gOrdinal, gTargetEnum)
-        return executeActionGet(r).getObjectValue(gCurrentToolOptions)
+        var d = executeActionGet(r).getObjectValue(gCurrentToolOptions);
+
+        if (d.hasKey(s2t('foregroundColor')) && !d.hasKey(s2t('backgroundColor'))) {
+            (r = new ActionReference()).putProperty(gProperty, s2t('backgroundColor'));
+            r.putEnumerated(gApplication, gOrdinal, gTargetEnum);
+            var x = executeActionGet(r);
+            d.putObject(s2t('backgroundColor'), x.getObjectType(s2t('backgroundColor')), x.getObjectValue(s2t('backgroundColor')));
+        }
+        return d;
     }
     this.getDescOptions = function (d, p) {
         try {
@@ -1790,7 +1798,7 @@ function Locale() {
         this.TriggerEnabled = { ru: 'триггер включен', en: 'trigger enabled' },
         this.Select = { ru: 'выбрать', en: 'select' },
         this.DoNotChangeTool = { ru: 'не переключать, если выбран другой инструмент', en: 'do not change if another tool is selected' },
-        this.ToolPreset = { ru: 'запомнить настройки инструмента', en: 'remember tool settings' },
+        this.ToolPreset = { ru: 'сохранить настройки инструмента', en: 'remember tool settings' },
         this.Cpt = { ru: 'Выбор инструмента', en: 'Tool Select' },
         this.TipLabel = { ru: 'Выберите на панели нужный инструмент:', en: 'Select the desired tool from panel:' },
         this.SelectTool = { ru: 'Выбрать', en: 'Select' },
