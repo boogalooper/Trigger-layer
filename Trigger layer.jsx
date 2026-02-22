@@ -1687,7 +1687,6 @@ function Events() {
             if (cfg.select) {
                 app.notifiers.add('slct', handlerFile, 'Lyr ')
                 app.notifiers.add('slct', handlerFile, 'Chnl')
-                app.notifiers.add('setd', handlerFile, 'Chnl')
             }
             if (cfg.play) {
                 app.notifiers.add('Ply ', handlerFile)
