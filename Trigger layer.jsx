@@ -29,7 +29,7 @@ var target, event,
     evt = new Events;
 try {
     if (arguments[0].hasKey(p = s2t('null'))) { target = t2s((arguments[0].getReference(p)).getDesiredClass()) }
-    if (arguments[0].hasKey(p = s2t('tool'))) { if (arguments[0].getObjectValue(p).getString(s2t('title')) == mMoveTool) target = mMoveTool }
+    if (arguments[0].hasKey(p = s2t('tool'))) { if (arguments[0].getObjectValue(p).getString(s2t('title')) == 'moveTool') target = 'moveTool' }
     if (arguments[0].hasKey(p = s2t('new'))) { target = t2s(arguments[0].getClass(p)) }
 } catch (e) { }
 try {
@@ -512,7 +512,7 @@ function addTrigger(desc, addMode, sourceItem) {
         cfg.effects = this.value
     }
     chLocked.onClick = function () {
-        cfg.locked = ths.value
+        cfg.locked = this.value
     }
     chBypass.onClick = function () {
         cfg.bypass = this.value
@@ -550,9 +550,9 @@ function addTrigger(desc, addMode, sourceItem) {
             etMask.active = true
             chExept.value = cfg.exept
             chFullMatch.value = cfg.fullMatch
-            chUserMask = cfg.userMask
-            chLocked = cfg.locked
-            chEffects = cfg.effects
+            chUserMask.value = cfg.userMask
+            chLocked.value = cfg.locked
+            chEffects.value = cfg.effects
             dlAction.selection = 0
             chActive.value = true
             chBypass.value = cfg.bypass
@@ -954,7 +954,7 @@ function toolSettings(desc, tool, excluded) {
                     return i
                 } else {
                     id++
-                    setExcluded(i, excluded, id)
+                    setExcluded(i, id, excluded)
                 }
             }
         }
@@ -1131,7 +1131,7 @@ function settings() {
         chDebug.value = cfg.debug
     }
     function bnOkStatus() {
-        ok.enabled = cfg.select || cfg.make || cfg.play || cfg.rename || cfg.delete || cfg.move
+        ok.enabled = chSelect.value || chMake.value || chPlay.value || chRename.value || chDelete.value
     }
     w.show()
 }
@@ -1408,7 +1408,7 @@ function ActionManager() {
                     o[strk] = d.getString(k);
                     break;
                 case DescValueType.INTEGERTYPE:
-                    o[strk] = d.getDouble(k);
+                    o[strk] = d.getInteger(k);
                     break;
                 case DescValueType.LISTTYPE:
                     o[strk] = d.getList(k);
@@ -1646,14 +1646,6 @@ function ActionManager() {
             return null
         }
     }
-    this.convertObjToStream = function (o) {
-        return objectToDescriptor(o).toStream()
-    }
-    this.convertStreamToObj = function (s) {
-        (d = new ActionDescriptor).fromStream(s);
-        descriptorToObject(o = {}, d)
-        return o
-    }
 }
 function Config() {
     this.fullMatch = false
@@ -1802,9 +1794,6 @@ function Locale() {
         this.Cpt = { ru: 'Выбор инструмента', en: 'Tool Select' },
         this.TipLabel = { ru: 'Выберите на панели нужный инструмент:', en: 'Select the desired tool from panel:' },
         this.SelectTool = { ru: 'Выбрать', en: 'Select' },
-        this.Cpt = { ru: 'Выбор инструмента', en: 'Tool Select' },
-        this.TipLabel = { ru: 'Выберите на панели нужный инструмент:', en: 'Select the desired tool from panel:' },
-        this.SelectTool = { ru: 'Выбрать', en: 'Select' },
         this.Params = { ru: 'Настройки', en: 'Settings' },
         this.Atn = { ru: 'экшен:', en: 'action:' },
         this.Set = { ru: 'группа:', en: 'action set:' },
@@ -1839,7 +1828,6 @@ function Locale() {
         this.Uncheck = { ru: 'Снять отметку', en: 'Uncheck' },
         this.CheckAll = { ru: 'Отметить все', en: 'Check all' },
         this.UncheckAll = { ru: 'Снять все отметки', en: 'Uncheck all' },
-        this.Rename = { ru: 'переименование', en: 'rename' },
         this.ExtendedPreset = { ru: ' (расширенный пресет)', en: ' (extended preset)' },
         this.UnexpectedTool = { ru: 'Перед вами полный набор настроек инструмента которые будут назначены при активации триггера. Вы можете управлять параметрами которые будут назначаться инструменту - включенные опции будут назначены из настроек которые вы видите выше, отключенные будут взяты из текущих (последних использованных в Фотошопе) настроек инструмента.\n\n* учтите, что отключение некоторых параметров может привести к не тому поведению инструмента, которое вы ожидаете.', en: 'Here is a complete set of tool settings that will be assigned when the trigger is activated. You can control the options that will be assigned to the tool - enabled options will be assigned from the settings you see above, disabled options will be taken from the current (last used in Photoshop) tool settings.\n\n* note that disabling some options may cause the tool to behave differently than you expect.' },
         this.Enable = { ru: 'Включить', en: 'Enable' },
